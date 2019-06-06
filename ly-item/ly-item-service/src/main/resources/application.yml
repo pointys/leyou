@@ -1,0 +1,35 @@
+#基本配置
+server:
+  port: 8081 # 网关端口
+spring:
+  application:
+    name: item-service # 应用名称
+  datasource:
+    url: jdbc:mysql://localhost:3306/heima
+    username: root
+    password: root
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 10
+#控制台打印dao层日志包括sql
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#eureka客户端
+eureka:
+  client:
+    service-url:  # 配置其他Eureka服务的地址，而不是自己，比如10087
+      defaultZone: http://127.0.0.1:10086/eureka # eureka注册中心url
+    registry-fetch-interval-seconds: 5 # 每5s获取一次服务列表
+  instance:
+    lease-renewal-interval-in-seconds: 5 # 每隔5秒发送一次心跳
+    lease-expiration-duration-in-seconds: 10 # 10秒不发送就过期
+    prefer-ip-address: true             # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    ip-address: 127.0.0.1           # 指定自己的ip信息，不指定的话会自己寻找
+    instance-id: ${spring.application.name}:${server.port}
+
+# 服务提供者配置zuul网关
+#zuul:
+#  prefix: /api # 添加路由前缀
+#  retryable: true

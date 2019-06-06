@@ -1,0 +1,46 @@
+#基本配置
+server:
+  port: 10010 # 网关端口
+spring:
+  application:
+    name: api-gateway # 该模块服务名称
+
+#eureka客户端
+eureka:
+  client:
+    service-url:  # 配置其他Eureka服务的地址，而不是自己，比如10087
+      defaultZone: http://127.0.0.1:10086/eureka # eureka注册中心url
+    registry-fetch-interval-seconds: 5 # 每5s获取一次服务列表
+  instance:
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    ip-address: 127.0.0.1   # 指定自己的ip信息，不指定的话会自己寻找
+    instance-id: ${spring.application.name}:${server.port}
+
+# zuul路由网关 拦截所有请求
+zuul:
+  prefix: /api # 添加路由前缀
+  retryable: true
+  routes:
+    item-service: /item/** # 将商品微服务映射到/item/** 访问该路由地址即访问商品服务地址 item-service
+    upload-service:
+      path: /upload/** # 访问/upload/**路径 即访问文件下载地址 upload-service服务
+      serviceId: upload-service
+      strip-prefix: false # 访问upload-service服务时不会去掉/upload前缀路径
+# http://localhost:10010/api/item/category/list ==>http://localhost:8081/category/list (会去掉/item)
+
+#ribbon负载均衡(调用别人)
+ribbon:
+  ConnectTimeout: 250 # 连接超时时间(ms)
+  ReadTimeout: 2000 # 通信超时时间(ms)
+  OkToRetryOnAllOperations: true # 是否对所有操作重试
+  MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数
+  MaxAutoRetries: 1 # 同一实例的重试次数
+
+#hystrix依赖隔离(调用别人)
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillisecond: 10000 # 熔断超时时长：10000ms

@@ -1,0 +1,17 @@
+#基本配置:端口服务名称
+server:
+  port: 10086 # 注册中心端口
+spring:
+  application:
+    name: ly-registry # 应用名称，会在Eureka中显示
+
+#eureka:客户端和服务端配置
+eureka:
+  client:
+    fetch-registry: false  # 是否检索服务
+    register-with-eureka: false  # 是否向服务注册中心注册自己
+    service-url:
+      defaultZone: http://127.0.0.1:${server.port}/eureka # 外部访问eureka的地址
+  server:
+    enable-self-preservation: false # 关闭自我保护
+    eviction-interval-timer-in-ms: 5000 # 每隔5秒进行一次服务列表清理
