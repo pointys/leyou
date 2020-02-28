@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
-            <version>9.0.13</version>
+            <version>9.0.31</version>
         </dependency>
         <dependency>
             <!--log4j与spring集成不需要再配置日志-->
